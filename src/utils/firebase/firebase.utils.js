@@ -5,23 +5,19 @@ import {
   signInWithRedirect,
   signInWithPopup,
   GoogleAuthProvider,
+  createUserWithEmailAndPassword,
 } from "firebase/auth";
 
-import {
-    getFirestore,
-    doc,
-    getDoc,
-    setDoc
-} from 'firebase/firestore'
+import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDnQiEAMo0TINeKZnLVVnTchrukmsiAH_g",
-  authDomain: "crwn-clothing-db-dcb2d.firebaseapp.com",
-  projectId: "crwn-clothing-db-dcb2d",
-  storageBucket: "crwn-clothing-db-dcb2d.appspot.com",
-  messagingSenderId: "642384832774",
-  appId: "1:642384832774:web:0f84bc02a92a12ce4a1687",
+  apiKey: "AIzaSyBsommqhqECG1n14MqTFfVoW8C4yPgbyB0",
+  authDomain: "crown-clothing-9d6ac.firebaseapp.com",
+  projectId: "crown-clothing-9d6ac",
+  storageBucket: "crown-clothing-9d6ac.appspot.com",
+  messagingSenderId: "213240815942",
+  appId: "1:213240815942:web:6dcfe19dfc8af85cdd0547",
 };
 
 // Initialize Firebase
@@ -29,41 +25,64 @@ const firebaseApp = initializeApp(firebaseConfig);
 
 const provider = new GoogleAuthProvider();
 provider.setCustomParameters({
-    prompt: "select_account"
+  prompt: "select_account",
 });
 
 export const auth = getAuth();
 export const signInWithGooglePopUp = () => signInWithPopup(auth, provider);
+export const signInWithGoogleRedirect = () =>
+  signInWithRedirect(auth, provider);
 
 export const db = getFirestore(); // instantiate firestore database
 
-export const createUserDocumentFromAuth = async (userAuth) => {
-    const userDocRef = doc(db, 'users', userAuth.uid);
+export const createUserDocumentFromAuth = async (
+  userAuth,
+  additionalInformation = {}
+) => {
+  const userDocRef = doc(db, "users", userAuth.uid);
 
-    console.log(userDocRef);
+  console.log(userDocRef);
 
-    const userSnapshot = await getDoc(userDocRef);
-    console.log(userSnapshot);
+  const userSnapshot = await getDoc(userDocRef);
+  console.log(userSnapshot);
 
-    if (!userSnapshot.exists()) {
-        const { displayName, email } = userAuth;
-        const createdAt = new Date();
+  if (!userSnapshot.exists()) {
+    const { displayName, email } = userAuth;
+    const createdAt = new Date();
 
-        try {
-            // set the doc in firestore if not exist
-            await setDoc(userDocRef, {
-                displayName,
-                email,
-                createdAt
-            });
-        } catch (error) {
-            console.log('error creating the user', error.message);
-        }
+    try {
+      // set the doc in firestore if not exist
+      await setDoc(userDocRef, {
+        displayName,
+        email,
+        createdAt,
+        ...additionalInformation,
+      });
+    } catch (error) {
+      console.log("error creating the user", error.message);
     }
+  }
 
-    return userDocRef;
+  return userDocRef;
 
-    // if user data exists
-    // if user data does not exist
-    // return userDocRef
-}
+  // if user data exists
+  // if user data does not exist
+  // return userDocRef
+};
+
+export const createAuthUserWithEmailAndPassword = async (email, password) => {
+  if (!email || !password) {
+    console.log("email and password are required");
+    return;
+  }
+  try {
+    const { user } = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    return user;
+  } catch (error) {
+    console.log("error creating the user", error.message);
+  }
+};
