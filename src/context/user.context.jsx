@@ -22,7 +22,6 @@ export const UserProvider = ({ children }) => {
         createUserDocumentFromAuth(user);
       }
       setCurrentUser(user);
-      console.log("this is the user", user);
     });
 
     // need to unsubscribe so you don't subscribe to destroyed component.
