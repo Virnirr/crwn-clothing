@@ -1,10 +1,9 @@
+import { useSelector } from "react-redux";
+
 import { Outlet } from "react-router-dom";
-import { Fragment, useContext } from "react";
+import { Fragment } from "react";
 import CartIcon from "../../components/cart-icon/cart-icon.component";
 import CartDropDown from "../../components/cart-dropdown/cart-dropdown.component";
-
-import { UserContext } from "../../context/user.context";
-import { CartContext } from "../../context/cart.context";
 
 import {
   NavigationContainer,
@@ -16,9 +15,14 @@ import {
 import { ReactComponent as CrwnLogo } from "../../assets/crown.svg";
 import { signOutUser } from "../../utils/firebase/firebase.utils";
 
+import { selectCurrentUser } from "../../store/user/user.selector";
+import { selectIsCartOpen } from "../../store/cart/cart.selector";
+
 const Navigation = () => {
-  const { currentUser } = useContext(UserContext);
-  const { isCartOpen } = useContext(CartContext);
+  const isCartOpen = useSelector(selectIsCartOpen);
+
+  // useSelector is a hook that allows you to extract data from the Redux store state, using a selector function.
+  const currentUser = useSelector(selectCurrentUser);
 
   const signOutHandler = async () => {
     await signOutUser();
