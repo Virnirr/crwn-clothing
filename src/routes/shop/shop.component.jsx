@@ -3,7 +3,6 @@ import Category from "../category/category.component";
 
 import { Routes, Route } from 'react-router-dom';
 
-
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { getCategoriesAndDocuments } from '../../utils/firebase/firebase.utils';

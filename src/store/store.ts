@@ -1,5 +1,5 @@
 import { compose, createStore, applyMiddleware } from "redux";
-import logger from "redux-logger";
+import { logger } from "redux-logger";
 
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
@@ -7,6 +7,8 @@ import storage from "redux-persist/lib/storage";
 // root reducer
 import { rootReducer } from "./root-reducer";
 
+// get type of root reducer
+export type RootState = ReturnType<typeof rootReducer>;
 
 
 // const loggerMiddleware = (store) => (next) => (action) => {
